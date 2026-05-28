@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Reserva | SkyReservas</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="app-body">
+
+<!-- ── NAVBAR ──────────────────────────────────────────────────────────────── -->
+<nav class="navbar">
+    <div class="navbar-brand">
+        <span class="logo-icon-sm">✈</span>
+        <span class="navbar-title">SkyReservas</span>
+    </div>
+    <div class="navbar-user">
+        <span class="user-greeting">Hola, <strong th:text="${usuario.nombre}">Usuario</strong></span>
+        <a th:href="@{/logout}" class="btn btn-outline btn-sm">Cerrar sesión</a>
+    </div>
+</nav>
+
+<!-- ── CONTENIDO PRINCIPAL ─────────────────────────────────────────────────── -->
+<main class="main-content">
+
+    <div class="checkout-wrapper">
+
+        <!-- Botón volver -->
+        <a th:href="@{/dashboard}" class="back-link">← Volver a vuelos</a>
+
+        <h2 class="page-title">Confirmar Reserva</h2>
+
+        <!-- ── RESUMEN DEL VUELO ──────────────────────────────────────────── -->
+        <div class="flight-summary-card">
+            <h3 class="summary-title">Detalle del Vuelo</h3>
+
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span class="summary-label">N° de Vuelo</span>
+                    <span class="summary-value highlight" th:text="${vuelo.nroVuelo}">1001</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Destino</span>
+                    <span class="summary-value" th:text="${vuelo.destino}">Buenos Aires</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Fecha</span>
+                    <span class="summary-value" th:text="${#temporals.format(vuelo.fecha, 'dd/MM/yyyy')}">01/01/2025</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Piloto</span>
+                    <span class="summary-value" th:text="${vuelo.piloto}">Piloto</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Aerolínea</span>
+                    <span class="summary-value" th:text="${vuelo.aerolinea}">Aerolínea</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Aeropuerto</span>
+                    <span class="summary-value" th:text="${vuelo.aeropuerto}">Aeropuerto</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">N° Avión</span>
+                    <span class="summary-value" th:text="${vuelo.nroAvion}">301</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FORMULARIO DE PAGO ─────────────────────────────────────────── -->
+        <div class="payment-card">
+            <h3 class="summary-title">Método de Pago</h3>
+
+            <form id="checkoutForm" novalidate>
+                <!-- Campo oculto con el ID del vuelo -->
+                <input type="hidden" id="vueloId" th:value="${vuelo.id}">
+
+                <div class="form-group">
+                    <label for="metodoPago">Seleccioná cómo querés pagar</label>
+                    <select id="metodoPago" name="metodoPago" class="form-control">
+                        <option value="">-- Seleccioná un método --</option>
+                        <option th:each="metodo : ${metodosPago}"
+                                th:value="${metodo.name()}"
+                                th:text="${metodo.descripcion}">
+                            Método de Pago
+                        </option>
+                    </select>
+                    <span class="field-error" id="metodoPagoError"></span>
+                </div>
+
+                <!-- Mensaje de error del servidor -->
+                <div class="alert alert-error" id="serverError" style="display:none;"></div>
+
+                <div class="checkout-actions">
+                    <a th:href="@{/dashboard}" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary btn-lg" id="btnReservar">
+                        Reservar ✈
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</main>
+
+<!-- ── MODAL DE ÉXITO ───────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay" style="display:none;" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <div class="modal-icon-success">✓</div>
+        <h2 class="modal-title">¡Reserva Confirmada!</h2>
+        <p class="modal-subtitle">Tu reserva fue procesada correctamente.</p>
+
+        <div class="reservation-number-box">
+            <span class="reservation-label">N° de Reserva</span>
+            <span class="reservation-number" id="nroReservaDisplay">------</span>
+        </div>
+
+        <p class="modal-note">Guardá este número para realizar el seguimiento de tu reserva.</p>
+
+        <button class="btn btn-primary btn-full" id="btnCerrarModal">
+            Volver a Vuelos Disponibles
+        </button>
+    </div>
+</div>
+
+<script th:src="@{/js/validaciones.js}"></script>
+<script th:src="@{/js/reserva.js}"></script>
+</body>
+</html>

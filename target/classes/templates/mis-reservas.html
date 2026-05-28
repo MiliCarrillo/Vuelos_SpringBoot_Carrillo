@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Reservas | SkyReservas</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="app-body">
+
+<!-- ── NAVBAR ──────────────────────────────────────────────────────────────── -->
+<nav class="navbar">
+    <div class="navbar-brand">
+        <span class="logo-icon-sm">✈</span>
+        <span class="navbar-title">SkyReservas</span>
+    </div>
+    <div class="navbar-user">
+        <span class="user-greeting">Hola, <strong th:text="${usuario.nombre}">Usuario</strong></span>
+        <a th:href="@{/dashboard}" class="btn btn-outline btn-sm">Vuelos</a>
+        <a th:href="@{/logout}" class="btn btn-outline btn-sm">Cerrar sesión</a>
+    </div>
+</nav>
+
+<!-- ── CONTENIDO PRINCIPAL ─────────────────────────────────────────────────── -->
+<main class="main-content">
+
+    <div class="page-header">
+        <h2 class="page-title">Mis Reservas</h2>
+        <p class="page-subtitle">Historial de reservas realizadas por tu cuenta</p>
+    </div>
+
+    <!-- Mensajes flash -->
+    <div th:if="${exito}" class="alert alert-success" th:text="${exito}"></div>
+    <div th:if="${error}"  class="alert alert-error"   th:text="${error}"></div>
+
+    <!-- ── TABLA DE RESERVAS ────────────────────────────────────────────────── -->
+    <div class="table-wrapper">
+        <table class="flights-table" th:if="${not #lists.isEmpty(reservas)}">
+            <thead>
+            <tr>
+                <th>N° Reserva</th>
+                <th>Destino</th>
+                <th>N° Vuelo</th>
+                <th>Fecha Vuelo</th>
+                <th>Aerolínea</th>
+                <th>Método de Pago</th>
+                <th>Fecha Reserva</th>
+                <th>Acción</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="reserva : ${reservas}" class="flight-row">
+
+                <td class="flight-number" th:text="${reserva.nroReserva}">123456</td>
+
+                <td>
+                    <span class="destination-tag" th:text="${reserva.vuelo.destino}">Destino</span>
+                </td>
+
+                <td th:text="${reserva.vuelo.nroVuelo}">1001</td>
+
+                <td th:text="${#temporals.format(reserva.vuelo.fecha, 'dd/MM/yyyy')}">01/01/2025</td>
+
+                <td th:text="${reserva.vuelo.aerolinea}">Aerolínea</td>
+
+                <td th:text="${reserva.metodoPago.descripcion}">Método</td>
+
+                <td th:text="${#temporals.format(reserva.fechaReserva, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:00</td>
+
+                <td>
+                    <!-- Botón que abre el modal de confirmación -->
+                    <button class="btn btn-danger btn-sm"
+                            th:data-id="${reserva.id}"
+                            th:data-nro="${reserva.nroReserva}"
+                            onclick="confirmarEliminacion(this)">
+                        Eliminar
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Estado vacío -->
+        <div th:if="${#lists.isEmpty(reservas)}" class="empty-state">
+            <div class="empty-icon">🎫</div>
+            <h3>Todavía no tenés reservas</h3>
+            <p>Buscá un vuelo disponible y realizá tu primera reserva.</p>
+            <a th:href="@{/dashboard}" class="btn btn-primary" style="margin-top:1rem;">
+                Ver vuelos disponibles
+            </a>
+        </div>
+    </div>
+
+</main>
+
+<!-- ── MODAL DE CONFIRMACIÓN DE ELIMINACIÓN ─────────────────────────────────── -->
+<div class="modal-overlay" id="modalEliminar" style="display:none;" role="dialog" aria-modal="true">
+    <div class="modal-card">
+        <div class="modal-icon-danger">✕</div>
+        <h2 class="modal-title">¿Eliminar reserva?</h2>
+        <p class="modal-subtitle">
+            Estás por eliminar la reserva N°
+            <strong id="nroReservaModal">------</strong>.
+            Esta acción no se puede deshacer.
+        </p>
+
+        <!-- Formulario oculto que hace el POST al confirmar -->
+        <form id="formEliminar" method="post" th:action="@{/mis-reservas/eliminar/0}">
+            <!-- El action se actualiza dinámicamente por JS -->
+        </form>
+
+        <div class="checkout-actions" style="justify-content: center; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-outline" onclick="cerrarModalEliminar()">
+                Cancelar
+            </button>
+            <button type="button" class="btn btn-danger" onclick="document.getElementById('formEliminar').submit()">
+                Sí, eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmarEliminacion(btn) {
+        const id  = btn.getAttribute('data-id');
+        const nro = btn.getAttribute('data-nro');
+
+        // Actualizar texto del modal
+        document.getElementById('nroReservaModal').textContent = nro;
+
+        // Actualizar el action del formulario con el ID real
+        document.getElementById('formEliminar').action = '/mis-reservas/eliminar/' + id;
+
+        // Mostrar modal
+        document.getElementById('modalEliminar').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function cerrarModalEliminar() {
+        document.getElementById('modalEliminar').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') cerrarModalEliminar();
+    });
+
+    // Cerrar al hacer click en el overlay
+    document.getElementById('modalEliminar').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModalEliminar();
+    });
+</script>
+
+</body>
+</html>

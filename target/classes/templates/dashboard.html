@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuelos Disponibles | SkyReservas</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="app-body">
+
+<!-- ── NAVBAR ──────────────────────────────────────────────────────────────── -->
+<nav class="navbar">
+    <div class="navbar-brand">
+        <span class="logo-icon-sm">✈</span>
+        <span class="navbar-title">SkyReservas</span>
+    </div>
+    <div class="navbar-user">
+        <span class="user-greeting">Hola, <strong th:text="${usuario.nombre}">Usuario</strong></span>
+        <a th:href="@{/mis-reservas}" class="btn btn-outline btn-sm">Mis Reservas</a>
+        <a th:href="@{/logout}" class="btn btn-outline btn-sm">Cerrar sesión</a>
+    </div>
+</nav>
+
+<!-- ── CONTENIDO PRINCIPAL ─────────────────────────────────────────────────── -->
+<main class="main-content">
+
+    <div class="page-header">
+        <h2 class="page-title">Vuelos Disponibles</h2>
+        <p class="page-subtitle">Seleccioná un vuelo para continuar con tu reserva</p>
+    </div>
+
+    <!-- Mensaje de error (ej: vuelo no encontrado al volver de checkout) -->
+    <div th:if="${param.error}" class="alert alert-error">
+        No se encontró el vuelo seleccionado. Por favor, intentá nuevamente.
+    </div>
+
+    <!-- ── TABLA DE VUELOS ──────────────────────────────────────────────────── -->
+    <div class="table-wrapper">
+        <table class="flights-table" th:if="${not #lists.isEmpty(vuelos)}">
+            <thead>
+                <tr>
+                    <th>N° Vuelo</th>
+                    <th>Destino</th>
+                    <th>Piloto</th>
+                    <th>Fecha</th>
+                    <th>Aerolínea</th>
+                    <th>Aeropuerto</th>
+                    <th>N° Avión</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="vuelo : ${vuelos}" class="flight-row">
+                    <td class="flight-number" th:text="${vuelo.nroVuelo}">1001</td>
+                    <td>
+                        <span class="destination-tag" th:text="${vuelo.destino}">Buenos Aires</span>
+                    </td>
+                    <td th:text="${vuelo.piloto}">Piloto</td>
+                    <td th:text="${#temporals.format(vuelo.fecha, 'dd/MM/yyyy')}">01/01/2025</td>
+                    <td th:text="${vuelo.aerolinea}">Aerolínea</td>
+                    <td th:text="${vuelo.aeropuerto}">Aeropuerto</td>
+                    <td th:text="${vuelo.nroAvion}">301</td>
+                    <td>
+                        <a th:href="@{/checkout/{id}(id=${vuelo.id})}"
+                           class="btn btn-primary btn-sm">
+                            Reservar
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Estado vacío -->
+        <div th:if="${#lists.isEmpty(vuelos)}" class="empty-state">
+            <div class="empty-icon">✈</div>
+            <h3>No hay vuelos disponibles</h3>
+            <p>En este momento no hay vuelos cargados en el sistema.</p>
+        </div>
+    </div>
+
+</main>
+
+</body>
+</html>
