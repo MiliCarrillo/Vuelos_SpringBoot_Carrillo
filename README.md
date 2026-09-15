@@ -2,12 +2,12 @@
 
 > Sistema de Reserva de Vuelos — Migración de Java POO puro a Spring Boot Web
 
-!\[Java](https://img.shields.io/badge/Java-17-orange?style=flat-square\&logo=java)
-!\[Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen?style=flat-square\&logo=springboot)
-!\[MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=flat-square\&logo=mysql)
-!\[Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1-green?style=flat-square)
-!\[Maven](https://img.shields.io/badge/Maven-3.9-red?style=flat-square\&logo=apachemaven)
-!\[Estado](https://img.shields.io/badge/Estado-MVP%20Funcional-success?style=flat-square)
+![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=java)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-brightgreen?style=flat-square&logo=springboot)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue?style=flat-square&logo=mysql)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1-green?style=flat-square)
+![Maven](https://img.shields.io/badge/Maven-3.9-red?style=flat-square&logo=apachemaven)
+![Estado](https://img.shields.io/badge/Estado-MVP%20Funcional-success?style=flat-square)
 
 \---
 
